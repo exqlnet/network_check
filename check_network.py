@@ -7,7 +7,7 @@ class NetworkCheck:
 
 
     def __init__(self, username, password):
-        source = """
+        self.source = """
             Accept: */*
             Accept-Encoding: gzip, deflate
             Accept-Language: en-US,en;q=0.9
@@ -31,12 +31,12 @@ class NetworkCheck:
         s = {x.split(':')[0].strip() : x.split(':')[1].strip() for x in s}
         return s
 
-    @staticmethod
-    def connect_to_network(username, password):
+    
+    def connect_to_network(self, username, password):
         while True:
             print("trying to connect network....")
-            data = "action=login&username=%s&password={B}%s&ac_id=1&user_ip=&nas_ip=&user_mac=&save_me=1&ajax=1" % (username, base64.b64encode(password))
-            login_res = requests.post(url='http://aaa.ncu.edu.cn:802/include/auth_action.php', data=data, headers=source_to_dict(self.source))
+            data = "action=login&username=%s&password={B}%s&ac_id=1&user_ip=&nas_ip=&user_mac=&save_me=1&ajax=1" % (username, base64.b64encode(password.encode()).decode())
+            login_res = requests.post(url='http://aaa.ncu.edu.cn:802/include/auth_action.php', data=data, headers=self.source_to_dict(self.source))
             print(login_res.status_code, login_res.text)
             if 'ok' in login_res.text:
                 break
@@ -50,7 +50,7 @@ class NetworkCheck:
                 res = requests.get("https://www.baidu.com/", timeout=3)
             except:
                 print("[warning]network downline!")
-                connect_to_network(self.username, self.password)
+                self.connect_to_network(self.username, self.password)
             print("[OK]Network works nice!")
             time.sleep(3)
 
